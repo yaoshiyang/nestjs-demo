@@ -5,7 +5,10 @@ import envConfig from '../env.config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { BaseInfoModule } from './module/base-info/base-info.module';
-import { RecordModule } from './module/record/record.module';
+import { ExamRecordModule } from './module/exam-record/exam-record.module';
+import { ExamResultModule } from './module/exam-result/exam-result.module';
+import { ExamModule } from './module/exam/exam.module';
+import { QuestionModule } from './module/question/question.module';
 
 @Module({
   imports: [
@@ -25,7 +28,10 @@ import { RecordModule } from './module/record/record.module';
         timezone: '+08:00', //服务器上配置的时区
       }),
     }),
-    RecordModule,
+    ExamRecordModule,
+    ExamResultModule,
+    ExamModule,
+    QuestionModule,
   ],
   controllers: [AppController],
   providers: [AppService],
