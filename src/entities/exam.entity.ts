@@ -5,9 +5,10 @@ import {
   OneToOne,
   OneToMany,
   JoinColumn,
+  CreateDateColumn,
 } from 'typeorm';
 import { ExamResultEntity } from './exam-result.entity';
-import { ExamRecord } from './exam-record.entity';
+import { ExamRecordEntity } from './exam-record.entity';
 // 考试表
 @Entity('exam')
 export class ExamEntity {
@@ -17,14 +18,14 @@ export class ExamEntity {
   @Column({ name: 'user_id', type: 'int' })
   userId: number;
 
-  @Column('int')
-  question_id: number;
+  @CreateDateColumn({
+    type: 'timestamp', // 对应数据库的 DATETIME 类型
+    comment: '创建时间',
+  })
+  startDate: Date;
 
   @Column('datetime')
-  startDate: string;
-
-  @Column('datetime')
-  endDate: string;
+  endDate: Date;
 
   @Column('int')
   status: string;
@@ -39,8 +40,8 @@ export class ExamEntity {
   location: string;
 
   @OneToOne(() => ExamResultEntity, (examResult) => examResult.exam)
-  examReuslt: ExamResultEntity;
+  examReuslt?: ExamResultEntity;
 
-  @OneToMany(() => ExamRecord, (examRecord) => examRecord.exam)
-  examRecord: ExamRecord[];
+  @OneToMany(() => ExamRecordEntity, (examRecord) => examRecord.exam)
+  examRecords?: ExamRecordEntity[];
 }

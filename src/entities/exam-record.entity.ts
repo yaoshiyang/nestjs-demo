@@ -25,15 +25,15 @@ export class ExamRecordEntity {
   userAudioUrl: string;
 
   @Column('datetime')
-  startDate: string;
+  startDate: Date;
 
   @Column('datetime')
-  endDate: string;
+  endDate: Date;
 
   @Column({ length: 255, type: 'varchar' })
-  ai: string;
+  ai?: string;
 
   @ManyToOne(() => ExamEntity)
   @JoinColumn({ name: 'exam_id' })
-  exam: ExamEntity;
+  exam?: ExamEntity;
 }

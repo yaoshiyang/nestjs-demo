@@ -24,7 +24,6 @@ DROP TABLE IF EXISTS `exam`;
 CREATE TABLE `exam`  (
   `id` int NOT NULL COMMENT '考试id',
   `user_id` int NOT NULL COMMENT '关联用户id',
-  `question_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '关联考题ID（这边需要再考虑下）',
   `startDate` datetime NULL DEFAULT NULL COMMENT '考试开始时间',
   `endDate` datetime NULL DEFAULT NULL COMMENT '考试结束时间',
   `status` int NULL DEFAULT NULL COMMENT '考试状态（0 - 进行中，1 - 完成）',
