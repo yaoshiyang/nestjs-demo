@@ -2,6 +2,7 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
+  CreateDateColumn,
   JoinColumn,
   ManyToOne,
 } from 'typeorm';
@@ -18,19 +19,22 @@ export class ExamRecordEntity {
   @Column({ name: 'question_id', type: 'int' })
   questionId: number;
 
-  @Column({ length: 255, name: 'user_answer', type: 'text' })
+  @Column({ name: 'user_answer', type: 'text' })
   userAnswer: string;
 
   @Column({ length: 255, name: 'user_audio_url', type: 'varchar' })
   userAudioUrl: string;
 
-  @Column('datetime')
+  @CreateDateColumn({
+    type: 'timestamp', // 对应数据库的 DATETIME 类型
+    comment: '创建时间',
+  })
   startDate: Date;
 
-  @Column('datetime')
+  @Column({ type: 'timestamp', name: 'endTime' })
   endDate: Date;
 
-  @Column({ length: 255, type: 'varchar' })
+  @Column({ type: 'text' })
   ai?: string;
 
   @ManyToOne(() => ExamEntity)

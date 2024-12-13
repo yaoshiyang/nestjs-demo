@@ -17,11 +17,11 @@ export class KnowledgeEntity {
   @Column({ type: 'int', name: 'question_id' })
   questionId: number;
 
-  @Column({ type: 'int', name: 'knowlege_id' })
+  @Column({ type: 'int', name: 'knowledge_id' })
   knowlegeId: number;
 
   @OneToOne(() => KnowledgeCategoryEntity)
-  @JoinColumn({ name: 'knowlege_id' })
+  @JoinColumn({ name: 'knowledge_id' })
   knowledgeCategory: KnowledgeCategoryEntity;
 
   @OneToOne(() => QuestionEntity)

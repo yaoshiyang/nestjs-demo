@@ -24,19 +24,30 @@ export class ExamEntity {
   })
   startDate: Date;
 
-  @Column('datetime')
+  @Column({
+    type: 'timestamp',
+    comment: '结束时间',
+  })
   endDate: Date;
 
-  @Column('int')
-  status: string;
+  @Column({ type: 'tinyint', default: 0, comment: '0 - 进行中，1 - 完成' })
+  status: number;
 
-  @Column({ length: 255 })
+  @Column({
+    type: 'tinyint',
+    default: 0,
+    comment: '考试类别（0-教师结构化面试）',
+  })
   category: string;
 
-  @Column('int')
+  @Column({
+    type: 'tinyint',
+    default: 0,
+    comment: '考试年级（0 - 小学 1- 初中 2 - 高中）',
+  })
   grade: string;
 
-  @Column({ length: 255 })
+  @Column({ type: 'varchar', length: 255 })
   location: string;
 
   @OneToOne(() => ExamResultEntity, (examResult) => examResult.exam)

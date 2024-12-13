@@ -31,7 +31,9 @@ export class ExamResultService {
   async getTotal() {
     // fixedMe: 1. userId should be passed from the request context
     const userId = 1;
-    const total = await this.examRepository.count({ where: { userId } });
+    const total = await this.examRepository.count({
+      where: { userId, status: 1 },
+    });
     return total;
   }
 

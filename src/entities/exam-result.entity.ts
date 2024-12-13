@@ -14,19 +14,23 @@ export class ExamResultEntity {
   @Column({ type: 'int', name: 'exam_id' })
   examId: number;
 
-  @Column('int')
+  @Column({
+    type: 'tinyint',
+    default: 0,
+    comment: '考试总分数',
+  })
   score: number;
 
-  @Column({ length: 255 })
+  @Column({ type: 'char' })
   ability: string;
 
-  @Column({ length: 255 })
+  @Column({ type: 'text' })
   advantages: string;
 
-  @Column({ length: 255 })
+  @Column({ type: 'text' })
   disadvantages: string;
 
-  @Column({ length: 255 })
+  @Column({ type: 'text' })
   knowledge: string;
 
   @OneToOne((type) => ExamEntity)

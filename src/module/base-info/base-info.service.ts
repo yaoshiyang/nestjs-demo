@@ -1,6 +1,6 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { BaseInfoEntity } from './base-info.entity';
+import { BaseInfoEntity } from '../../entities/base-info.entity';
 import { Repository } from 'typeorm';
 import { CreateBaseExamInfoDto } from '../../dto/base-info.dto';
 @Injectable()

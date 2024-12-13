@@ -72,7 +72,7 @@ export class ExamController {
     examRecords.forEach((record) => this.recordQuestion(record));
     this.examService.updateExam({
       ...examData,
-      status: '1',
+      status: 1,
       userId,
       id: examData.id,
     });

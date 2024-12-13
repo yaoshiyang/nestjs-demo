@@ -1,4 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { KnowledgeEntity } from 'src/entities/knowledge.entity';
 
 // 知识条目
@@ -7,19 +14,25 @@ export class KnowledgeCategoryEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'int' })
+  @Column({ type: 'tinyint', default: 0 })
   category: number;
 
-  @Column({ length: 255, type: 'varchar' })
+  @Column({ type: 'char' })
   title: number;
 
-  @Column({ length: 255, type: 'text' })
+  @Column({ type: 'text' })
   describe: string;
 
-  @Column('datetime')
+  @CreateDateColumn({
+    type: 'timestamp', // 对应数据库的 DATETIME 类型
+    comment: '创建时间',
+  })
   startDate: string;
 
-  @Column('datetime')
+  @UpdateDateColumn({
+    type: 'timestamp', // 对应数据库的 DATETIME 类型
+    comment: '更新时间',
+  })
   updateDate: string;
 
   @ManyToOne(() => KnowledgeEntity, (knowledge) => knowledge.knowledgeCategory)

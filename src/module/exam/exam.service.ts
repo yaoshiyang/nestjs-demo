@@ -15,9 +15,13 @@ export class ExamService {
   /**
    * 获取考试题目
    * @todo  根据算法返回题目Id；/ 先创建考试表？还是直接返回题目？取决与算法需要的条件
+   *
+   * @param rangeTime 面试时长
+   * @param count 题目数量
+   * @param ai 是否使用AI
    */
   async getQuestionIds(rangeTime: number, count: number, ai: number) {
-    return [];
+    return [1, 2, 3];
   }
 
   async createExam(category: string, grade: string, location: string) {
@@ -27,7 +31,7 @@ export class ExamService {
       category,
       grade,
       location,
-      status: '0',
+      status: 0,
     });
     return await this.examRepository.save(exam);
   }
