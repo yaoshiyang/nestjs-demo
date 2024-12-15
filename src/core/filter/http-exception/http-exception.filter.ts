@@ -12,9 +12,12 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const response = ctx.getResponse();
     const status = exception.getStatus();
 
+    const validator = exception.getResponse()?.['message']?.[0];
     // 设置错误信息
     const message =
-      exception.message || `${status > 500 ? 'Service Error' : 'Client Error'}`;
+      validator ||
+      exception.message ||
+      `${status >= 500 ? 'Service Error' : 'Client Error'}`;
     const errorResponse = { data: null, message, code: -1 };
 
     // 设置返回状态码

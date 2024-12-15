@@ -32,6 +32,7 @@ export class ExamService {
       grade,
       location,
       status: 0,
+      startDate: new Date(),
     });
     return await this.examRepository.save(exam);
   }
@@ -55,11 +56,16 @@ export class ExamService {
 
   async saveExamRecord(payLoad: ExamRecordEntity) {
     const { id } = payLoad;
-    await this.examRecordRepository.update(id, payLoad);
-    return this.examRecordRepository.findOneBy({ id });
+    if (!id) {
+      const examRecord = this.examRecordRepository.create(payLoad);
+      return await this.examRecordRepository.save(examRecord);
+    } else {
+      await this.examRecordRepository.update(id, payLoad);
+      return this.examRecordRepository.findOneBy({ id });
+    }
   }
 
-  async saveAudio(userAudio: string) {
-    return '';
+  async saveAudio(userAudio: Express.Multer.File) {
+    return userAudio.path;
   }
 }

@@ -4,8 +4,7 @@ import { Transform, Type } from 'class-transformer';
 
 export class SaveExamRecordDto {
   @ApiProperty({ description: '记录Id' })
-  @IsNotEmpty({ message: '记录Id不可为空' })
-  id: number;
+  id?: number;
 
   @ApiProperty({ description: '考试Id' })
   @IsNotEmpty({ message: '考试Id不可为空' })
@@ -20,8 +19,7 @@ export class SaveExamRecordDto {
   readonly userAnswer: string;
 
   @ApiProperty({ description: '用户语音' })
-  @IsNotEmpty({ message: '用户语音不可为空' })
-  readonly userAudio: string;
+  readonly userAudio: Express.Multer.File;
 
   @ApiProperty({ description: '用户回答开始时间' })
   @IsNotEmpty({ message: '用户回答开始时间不可为空' })

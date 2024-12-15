@@ -1,8 +1,18 @@
-import { Controller, Query, Get, Post, Body } from '@nestjs/common';
+import {
+  Controller,
+  Query,
+  Get,
+  Post,
+  Body,
+  UploadedFile,
+  UseInterceptors,
+} from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { ExamService } from './exam.service';
 import { QuestionService } from '../question/question.service';
 import { SaveExamRecordDto } from 'src/dto/save-exam-record.dto';
 import { SaveExamDto } from 'src/dto/save-exam.dto';
+import { multerConfig } from 'src/config/multer';
 @Controller('exam')
 export class ExamController {
   constructor(
@@ -26,9 +36,9 @@ export class ExamController {
     );
     const qestionIds = await this.examService.getQuestionIds(15, 3, 1);
     const questions = await this.questionService.getQuestions(qestionIds);
-    qestionIds.forEach((qId) => {
-      this.examService.createExamRecord(exam.id, qId);
-    });
+    // qestionIds.forEach((qId) => {
+    //   this.examService.createExamRecord(exam.id, qId);
+    // });
     return { examId: exam.id, questions };
   }
 
@@ -47,18 +57,24 @@ export class ExamController {
   // 记录每一题的结果（完成回答调用）
   /**
    * 记录每一题的结果
-   * @todo 保存静态语音
+   * @todo 需要增加一个事务
    * @param */
   @Post('record')
-  async recordQuestion(@Body() RecordDto: SaveExamRecordDto) {
+  @UseInterceptors(FileInterceptor('userAudio', multerConfig))
+  async recordQuestion(
+    @UploadedFile() userAudio: Express.Multer.File,
+    @Body() RecordDto: SaveExamRecordDto,
+  ) {
     // 保存语音流
-    const userAudioUrl = await this.examService.saveAudio(RecordDto.userAudio);
+    const userAudioUrl = await this.examService.saveAudio(userAudio);
     const payLoad = { ...RecordDto, userAudioUrl };
     return await this.examService.saveExamRecord(payLoad);
   }
 
+  // 保存考试；
   @Post('save')
   async saveExam(@Body() payLoad: SaveExamDto) {
+    debugger;
     let { examRecords, ...examData } = payLoad;
     const userId = 1;
     if (!examData.id) {
@@ -69,7 +85,10 @@ export class ExamController {
       );
       examData.id = exam.id;
     }
-    examRecords.forEach((record) => this.recordQuestion(record));
+    if (examRecords && examRecords.length > 0)
+      examRecords.forEach((record) =>
+        this.recordQuestion(record.userAudio, record),
+      );
     this.examService.updateExam({
       ...examData,
       status: 1,

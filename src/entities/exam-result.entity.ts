@@ -6,7 +6,7 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { ExamEntity } from './exam.entity';
-@Entity('exam_result')
+@Entity('exam-result')
 export class ExamResultEntity {
   @PrimaryGeneratedColumn()
   id: number;
@@ -21,7 +21,7 @@ export class ExamResultEntity {
   })
   score: number;
 
-  @Column({ type: 'char' })
+  @Column({ type: 'text' })
   ability: string;
 
   @Column({ type: 'text' })

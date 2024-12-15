@@ -25,6 +25,7 @@ export class ExamResultController {
     return await this.examResultService.getDetail(examId);
   }
 
+  // 根据考试Id查询考试记录明细 + 关联回答的问题 + 本次考试结果
   @Get('full')
   async getFullDetail(@Query('examId') examId: number) {
     return await this.examResultService.getFullDetail(examId);
@@ -32,7 +33,9 @@ export class ExamResultController {
 
   // 查询考试记录
   @Get('query')
-  async query(@Query() query: ExamResultdDto) {
+  async query(
+    @Query() query: ExamResultdDto = { currentPage: 1, pageSize: 10 },
+  ) {
     const [data, total] = await this.examResultService.findAll(query);
     return {
       data,

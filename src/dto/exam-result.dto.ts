@@ -14,8 +14,8 @@ export class ExamResultdDto {
   readonly dataTime?: Date;
 
   @ApiProperty({ description: '类别' })
-  readonly category: string;
+  readonly category?: string;
 
   @ApiProperty({ description: '知识点' })
-  readonly knowlege: string;
+  readonly knowlege?: string;
 }

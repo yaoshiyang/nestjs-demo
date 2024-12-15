@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, DataSource } from 'typeorm';
 import { ExamEntity } from 'src/entities/exam.entity';
 import { ExamResultEntity } from '../../entities/exam-result.entity';
 import { ExamResultdDto } from '../../dto/exam-result.dto';
@@ -15,17 +15,17 @@ export class ExamResultService {
     private readonly examResultRepository: Repository<ExamResultEntity>,
   ) {}
 
-  async findAll(query: ExamResultdDto): Promise<[ExamEntity, number]> {
+  async findAll(query: ExamResultdDto): Promise<[ExamEntity[], number]> {
     // fixedMe: 1. userId should be passed from the request context
     const userId = 1;
     const currentPage = (query.currentPage - 1) * query.pageSize;
     const queryBuilder = this.examRepository.createQueryBuilder('exam');
-    queryBuilder
+    const data = await queryBuilder
       .where('exam.userId = :userId', { userId })
       .skip(currentPage)
       .take(query.pageSize)
       .getManyAndCount();
-    return [queryBuilder[0], queryBuilder[1]];
+    return [data[0], data[1]];
   }
 
   async getTotal() {
@@ -46,6 +46,10 @@ export class ExamResultService {
    * @param examId
    */
   async getFullDetail(examId: number) {
-    return await this.examRepository.findOne({ where: { id: examId } });
+    const exam = await this.examRepository.findOne({
+      where: { id: examId, status: 1 },
+      relations: ['examRecords', 'examReuslt'],
+    });
+    return exam;
   }
 }
