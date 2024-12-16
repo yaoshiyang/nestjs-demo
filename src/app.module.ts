@@ -25,6 +25,11 @@ import { QuestionModule } from './module/question/question.module';
         password: configService.get('DB_PASSWORD', 'root'), // 密码
         database: configService.get('DB_DATABASE', 'interview'), //数据库名
         timezone: '+08:00', //服务器上配置的时区
+        extra: {
+          connectionInitSqls: [
+            "SET SESSION sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));",
+          ],
+        },
       }),
     }),
     ExamResultModule,

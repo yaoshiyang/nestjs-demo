@@ -71,10 +71,13 @@ export class ExamController {
     return await this.examService.saveExamRecord(payLoad);
   }
 
+  // AI润色答案
+  @Get('ai')
+  async aiAnswer() {}
+
   // 保存考试；
   @Post('save')
   async saveExam(@Body() payLoad: SaveExamDto) {
-    debugger;
     let { examRecords, ...examData } = payLoad;
     const userId = 1;
     if (!examData.id) {

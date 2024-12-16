@@ -5,6 +5,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { QuestionEntity } from 'src/entities/question.entity';
 import { KnowledgeEntity } from 'src/entities/knowledge.entity';
 import { KnowledgeCategoryEntity } from 'src/entities/knowledge-category';
+import { ExamEntity } from 'src/entities/exam.entity';
+import { ExamRecordEntity } from 'src/entities/exam-record.entity';
 @Module({
   controllers: [QuestionController],
   providers: [QuestionService],
@@ -12,6 +14,8 @@ import { KnowledgeCategoryEntity } from 'src/entities/knowledge-category';
   imports: [
     TypeOrmModule.forFeature([
       QuestionEntity,
+      ExamEntity,
+      ExamRecordEntity,
       KnowledgeEntity,
       KnowledgeCategoryEntity,
     ]),

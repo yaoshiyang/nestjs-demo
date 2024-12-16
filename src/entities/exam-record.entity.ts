@@ -5,8 +5,11 @@ import {
   CreateDateColumn,
   JoinColumn,
   ManyToOne,
+  OneToOne,
 } from 'typeorm';
 import { ExamEntity } from 'src/entities/exam.entity';
+import { QuestionEntity } from './question.entity';
+
 // 考试表
 @Entity('exam-record')
 export class ExamRecordEntity {
@@ -41,4 +44,8 @@ export class ExamRecordEntity {
   @ManyToOne(() => ExamEntity)
   @JoinColumn({ name: 'exam_id' })
   exam?: ExamEntity;
+
+  @OneToOne(() => QuestionEntity)
+  @JoinColumn({ name: 'question_id' })
+  question?: QuestionEntity;
 }
