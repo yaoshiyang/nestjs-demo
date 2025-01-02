@@ -6,6 +6,7 @@ import {
   HttpException,
   HttpStatus,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { BaseInfoService } from './base-info.service';
 import { CreateBaseExamInfoDto } from '../../dto/base-info.dto';

@@ -8,6 +8,7 @@ import { BaseInfoModule } from './module/base-info/base-info.module';
 import { ExamResultModule } from './module/exam-result/exam-result.module';
 import { ExamModule } from './module/exam/exam.module';
 import { QuestionModule } from './module/question/question.module';
+import { AuthingModule } from './module/authing/authing.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { QuestionModule } from './module/question/question.module';
     ExamResultModule,
     ExamModule,
     QuestionModule,
+    AuthingModule,
   ],
   controllers: [AppController],
   providers: [AppService],

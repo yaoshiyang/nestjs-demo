@@ -1,8 +1,9 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { ExamResultdDto } from '../../dto/exam-result.dto';
 import { ExamResultService } from './exam-result.service';
-
+import { AuthingGuard } from 'src/guard/authing/authing.guard';
 @Controller('result')
+@UseGuards(AuthingGuard)
 export class ExamResultController {
   constructor(private readonly examResultService: ExamResultService) {}
 

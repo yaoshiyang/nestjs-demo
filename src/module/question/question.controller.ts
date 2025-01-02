@@ -1,7 +1,10 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { QuestionDto } from 'src/dto/question.dto';
 import { QuestionService } from './question.service';
+import { AuthingGuard } from 'src/guard/authing/authing.guard';
+
 @Controller('question')
+@UseGuards(AuthingGuard)
 export class QuestionController {
   constructor(private readonly QuestionService: QuestionService) {}
   // 查询考试记录

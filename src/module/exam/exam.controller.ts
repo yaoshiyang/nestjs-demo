@@ -6,6 +6,8 @@ import {
   Body,
   UploadedFile,
   UseInterceptors,
+  UseGuards,
+  Req,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ExamService } from './exam.service';
@@ -13,7 +15,16 @@ import { QuestionService } from '../question/question.service';
 import { SaveExamRecordDto } from 'src/dto/save-exam-record.dto';
 import { SaveExamDto } from 'src/dto/save-exam.dto';
 import { multerConfig } from 'src/config/multer';
+import { AuthingGuard } from 'src/guard/authing/authing.guard';
+import { Request } from 'express';
+
+interface CustomRequest extends Request {
+  user?: {
+    userId: number;
+  };
+}
 @Controller('exam')
+@UseGuards(AuthingGuard)
 export class ExamController {
   constructor(
     private readonly examService: ExamService,
@@ -21,13 +32,14 @@ export class ExamController {
   ) {}
 
   /**
-   * 创建此次考试（主要考虑到算法，否则可以直接保存在创建）
+  async createExam(@Query() query: any, @Req() request: CustomRequest) {
    * 1. 取决于算法，需不需要拿到模拟考试ID；
    * @param query
    * @returns
    */
   @Get('create')
-  async createExam(@Query() query: any) {
+  async createExam(@Query() query: any, @Req() request: CustomRequest) {
+    const userId = request.user!.userId;
     // 创建考试
     const exam = await this.examService.createExam(
       query.category,
