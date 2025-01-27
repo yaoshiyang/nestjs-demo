@@ -15,26 +15,48 @@ export class ExamResultService {
     private readonly examResultRepository: Repository<ExamResultEntity>,
   ) {}
 
-  async findAll(query: ExamResultdDto): Promise<[ExamEntity[], number]> {
-    // fixedMe: 1. userId should be passed from the request context
-    const userId = 1;
+  async findAll(
+    query: ExamResultdDto,
+    userId: string,
+  ): Promise<[ExamEntity[], number]> {
     const currentPage = (query.currentPage - 1) * query.pageSize;
     const queryBuilder = this.examRepository.createQueryBuilder('exam');
-    const data = await queryBuilder
+    queryBuilder
+      .leftJoinAndSelect('exam.examReuslt', 'examReuslt')
       .where('exam.userId = :userId', { userId })
+      .andWhere('exam.status = 1');
+    if (query.startDate) {
+      queryBuilder.andWhere('exam.startDate >= :startDate', {
+        startDate: query.startDate,
+      });
+    }
+    if (query.endDate) {
+      queryBuilder.andWhere('exam.endDate <= :endDate', {
+        endDate: query.endDate,
+      });
+    }
+    const data = await queryBuilder
       .skip(currentPage)
       .take(query.pageSize)
       .getManyAndCount();
     return [data[0], data[1]];
   }
 
-  async getTotal() {
-    // fixedMe: 1. userId should be passed from the request context
-    const userId = 1;
-    const total = await this.examRepository.count({
+  async getTotal(userId: string) {
+    const total = await this.examRepository.find({
       where: { userId, status: 1 },
+      relations: ['examReuslt'],
     });
-    return total;
+    let result = { count: 0, averageScore: 0, totalTime: 0, maxScore: 0 };
+    for (const item of total) {
+      result.count++;
+      result.averageScore += item.examReuslt?.score ?? 0;
+      result.totalTime += item.duration;
+      result.maxScore = Math.max(result.maxScore, item.examReuslt?.score ?? 0);
+    }
+    result.totalTime = Math.floor(result.totalTime / 60);
+    result.averageScore = result.averageScore / result.count;
+    return result;
   }
 
   async getDetail(examId: number) {
@@ -48,7 +70,7 @@ export class ExamResultService {
   async getFullDetail(examId: number) {
     const exam = await this.examRepository.findOne({
       where: { id: examId, status: 1 },
-      relations: ['examRecords', 'examReuslt'],
+      relations: ['examRecords', 'examReuslt', 'examRecords.question'],
     });
     return exam;
   }

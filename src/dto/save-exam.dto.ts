@@ -19,6 +19,12 @@ export class SaveExamDto {
   @Transform(({ value }) => new Date(value))
   readonly endDate: Date;
 
+  @ApiProperty({ description: '考试题目数量' })
+  count: number;
+
+  @ApiProperty({ description: '考试时间' })
+  duration: number;
+
   @ApiProperty({ description: '考试类型' })
   category: string;
 

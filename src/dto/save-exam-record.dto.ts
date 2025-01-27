@@ -15,8 +15,7 @@ export class SaveExamRecordDto {
   questionId: number;
 
   @ApiProperty({ description: '用户回答' })
-  @IsNotEmpty({ message: '用户回答不可为空' })
-  readonly userAnswer: string;
+  readonly userAnswer?: string;
 
   @ApiProperty({ description: '用户语音' })
   readonly userAudio: Express.Multer.File;

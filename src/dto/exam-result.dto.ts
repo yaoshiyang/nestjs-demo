@@ -8,10 +8,15 @@ export class ExamResultdDto {
   @ApiProperty({ description: '当前条数' })
   readonly pageSize: number;
 
-  @ApiProperty({ description: '查询日期' })
+  @ApiProperty({ description: '开始日期' })
   @Type(() => Date)
   @Transform(({ value }) => new Date(value))
-  readonly dataTime?: Date;
+  readonly startDate?: Date;
+
+  @ApiProperty({ description: '结束日期' })
+  @Type(() => Date)
+  @Transform(({ value }) => new Date(value))
+  readonly endDate?: Date;
 
   @ApiProperty({ description: '类别' })
   readonly category?: string;

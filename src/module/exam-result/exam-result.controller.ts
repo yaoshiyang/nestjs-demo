@@ -1,7 +1,14 @@
-import { Controller, Get, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Query, UseGuards, Req } from '@nestjs/common';
 import { ExamResultdDto } from '../../dto/exam-result.dto';
 import { ExamResultService } from './exam-result.service';
 import { AuthingGuard } from 'src/guard/authing/authing.guard';
+
+interface CustomRequest extends Request {
+  user?: {
+    userId: string;
+  };
+}
+
 @Controller('result')
 @UseGuards(AuthingGuard)
 export class ExamResultController {
@@ -9,15 +16,20 @@ export class ExamResultController {
 
   // 首页 - 最近考试记录（默认最多10条）
   @Get('recent')
-  async getRecentRecord() {
+  async getRecentRecord(@Req() request: CustomRequest) {
+    const userId = request.user!.userId;
     const query = { dataTime: new Date(), currentPage: 1, pageSize: 10 };
-    const data = await this.examResultService.findAll(query as ExamResultdDto);
+    const data = await this.examResultService.findAll(
+      query as ExamResultdDto,
+      userId,
+    );
     return data[0];
   }
 
   @Get('total')
-  async getTotal() {
-    return await this.examResultService.getTotal();
+  async getTotal(@Req() request: CustomRequest) {
+    const userId = request.user!.userId;
+    return await this.examResultService.getTotal(userId);
   }
 
   // 根据考试Id查询考试记录明细
@@ -36,8 +48,10 @@ export class ExamResultController {
   @Get('query')
   async query(
     @Query() query: ExamResultdDto = { currentPage: 1, pageSize: 10 },
+    @Req() request: CustomRequest,
   ) {
-    const [data, total] = await this.examResultService.findAll(query);
+    const userId = request.user!.userId;
+    const [data, total] = await this.examResultService.findAll(query, userId);
     return {
       data,
       page: {

@@ -5,7 +5,6 @@ import { QuestionDto } from 'src/dto/question.dto';
 import { ExamEntity } from 'src/entities/exam.entity';
 import { QuestionEntity } from 'src/entities/question.entity';
 import { ExamRecordEntity } from 'src/entities/exam-record.entity';
-import { debug } from 'console';
 @Injectable()
 export class QuestionService {
   constructor(
@@ -21,9 +20,11 @@ export class QuestionService {
 
   // 直接引用SQL语句查询，性能更高
   // getRawMany 与 getManyAndCount 是有区别的！尤其在GroupBy的情况下
-  async findAll(query: QuestionDto): Promise<[QuestionEntity[], number]> {
+  async findAll(
+    query: QuestionDto,
+    userId: string,
+  ): Promise<[QuestionEntity[], number]> {
     // fixedMe: 1. userId should be passed from the request context
-    const userId = 1;
     const exams = await this.examRepository.find({
       where: { userId },
       select: ['id'],

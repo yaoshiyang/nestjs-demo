@@ -42,4 +42,12 @@ export class QuestionEntity {
 
   @OneToOne(() => KnowledgeEntity, (knowledge) => knowledge.question)
   knowledge: KnowledgeEntity;
+
+  @Column({
+    type: 'tinyint',
+    default: 0,
+    comment:
+      '题目大类(0 - 职业认知 1 - 人际沟通  2 - 教育教学 3 - 综合分析  4 - 组织管理  5 - 应急应变)',
+  })
+  type: number;
 }

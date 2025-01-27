@@ -20,18 +20,16 @@ export class ExamService {
    * @param count 题目数量
    * @param ai 是否使用AI
    */
-  async getQuestionIds(rangeTime: number, count: number, ai: number) {
+  async getQuestionIds() {
     return [1, 2, 3];
   }
 
-  async createExam(category: string, grade: string, location: string) {
-    const userId = 1;
+  async createExam(userId: string, count: number, duration: number) {
     const exam = this.examRepository.create({
       userId,
-      category,
-      grade,
-      location,
       status: 0,
+      count,
+      duration,
       startDate: new Date(),
     });
     return await this.examRepository.save(exam);
@@ -67,5 +65,10 @@ export class ExamService {
 
   async saveAudio(userAudio: Express.Multer.File) {
     return userAudio.path;
+  }
+
+  async deleteExam(id: number) {
+    await this.examRepository.delete(id);
+    await this.examRecordRepository.delete({ examId: id });
   }
 }

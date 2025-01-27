@@ -5,7 +5,9 @@ import { MulterOptions } from '@nestjs/platform-express/multer/interfaces/multer
 export const multerConfig: MulterOptions = {
   limits: { fileSize: 1024 * 1024 * 5 },
   fileFilter: (req, file, cb) => {
-    if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
+    const audioMimePattern =
+      /^audio\/(mpeg|wav|aac|ogg|flac|webm|midi|x-midi)$/;
+    if (!audioMimePattern.test(file.mimetype)) {
       return cb(new Error('File format is not valid'), false);
     }
     cb(null, true);

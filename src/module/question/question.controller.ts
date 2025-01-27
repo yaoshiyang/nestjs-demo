@@ -1,7 +1,13 @@
-import { Controller, Get, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Query, UseGuards, Req } from '@nestjs/common';
 import { QuestionDto } from 'src/dto/question.dto';
 import { QuestionService } from './question.service';
 import { AuthingGuard } from 'src/guard/authing/authing.guard';
+
+interface CustomRequest extends Request {
+  user?: {
+    userId: string;
+  };
+}
 
 @Controller('question')
 @UseGuards(AuthingGuard)
@@ -9,8 +15,12 @@ export class QuestionController {
   constructor(private readonly QuestionService: QuestionService) {}
   // 查询考试记录
   @Get('query')
-  async query(@Query() query: QuestionDto = { currentPage: 1, pageSize: 10 }) {
-    const [data, total] = await this.QuestionService.findAll(query);
+  async query(
+    @Query() query: QuestionDto = { currentPage: 1, pageSize: 10 },
+    @Req() request: CustomRequest,
+  ) {
+    const userId = request.user!.userId;
+    const [data, total] = await this.QuestionService.findAll(query, userId);
     return {
       data,
       page: {

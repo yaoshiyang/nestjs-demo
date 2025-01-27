@@ -20,7 +20,7 @@ import { Request } from 'express';
 
 interface CustomRequest extends Request {
   user?: {
-    userId: number;
+    userId: string;
   };
 }
 @Controller('exam')
@@ -34,6 +34,7 @@ export class ExamController {
   /**
   async createExam(@Query() query: any, @Req() request: CustomRequest) {
    * 1. 取决于算法，需不需要拿到模拟考试ID；
+   * @todo: 缺少一张表，user表，去描述当前用户基础信息，vip次数等内容。
    * @param query
    * @returns
    */
@@ -42,15 +43,13 @@ export class ExamController {
     const userId = request.user!.userId;
     // 创建考试
     const exam = await this.examService.createExam(
-      query.category,
-      query.grade,
-      query.location,
+      userId,
+      query.count,
+      query.duration,
     );
-    const qestionIds = await this.examService.getQuestionIds(15, 3, 1);
+
+    const qestionIds = await this.examService.getQuestionIds();
     const questions = await this.questionService.getQuestions(qestionIds);
-    // qestionIds.forEach((qId) => {
-    //   this.examService.createExamRecord(exam.id, qId);
-    // });
     return { examId: exam.id, questions };
   }
 
@@ -61,7 +60,7 @@ export class ExamController {
     @Query('ai') ai: number = 1,
   ) {
     // 获取AI生成题目；
-    const ids = await this.examService.getQuestionIds(rangeTime, count, ai);
+    const ids = await this.examService.getQuestionIds();
     const questions = await this.questionService.getQuestions(ids);
     return questions;
   }
@@ -89,14 +88,14 @@ export class ExamController {
 
   // 保存考试；
   @Post('save')
-  async saveExam(@Body() payLoad: SaveExamDto) {
+  async saveExam(@Body() payLoad: SaveExamDto, @Req() request: CustomRequest) {
     let { examRecords, ...examData } = payLoad;
-    const userId = 1;
+    const userId = request.user!.userId;
     if (!examData.id) {
       const exam = await this.examService.createExam(
-        examData.category,
-        examData.grade,
-        examData.location,
+        userId,
+        examData.count,
+        examData.duration,
       );
       examData.id = exam.id;
     }
@@ -110,5 +109,11 @@ export class ExamController {
       userId,
       id: examData.id,
     });
+  }
+
+  // 删除当前考试记录
+  @Get('delete')
+  async deleteExam(@Query('id') id: number) {
+    return await this.examService.deleteExam(id);
   }
 }
