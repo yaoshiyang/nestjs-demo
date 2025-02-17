@@ -31,7 +31,7 @@ export class ExamResultEntity {
   disadvantages: string;
 
   @Column({ type: 'text' })
-  knowledge: string;
+  knowledge?: string;
 
   @OneToOne((type) => ExamEntity)
   @JoinColumn({ name: 'exam_id' }) // 这是外键，如果不传name自动创建exam_id

@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { HttpModule } from '@nestjs/axios';
 import { ConfigService, ConfigModule } from '@nestjs/config';
 import envConfig from '../env.config';
 import { AppController } from './app.controller';
@@ -12,6 +13,7 @@ import { AuthingModule } from './module/authing/authing.module';
 
 @Module({
   imports: [
+    HttpModule,
     BaseInfoModule,
     ConfigModule.forRoot({ isGlobal: true, envFilePath: [envConfig.path] }),
     TypeOrmModule.forRootAsync({

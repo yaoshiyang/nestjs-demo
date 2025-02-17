@@ -12,6 +12,7 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ExamService } from './exam.service';
 import { QuestionService } from '../question/question.service';
+import { ExamResultService } from '../exam-result/exam-result.service';
 import { SaveExamRecordDto } from 'src/dto/save-exam-record.dto';
 import { SaveExamDto } from 'src/dto/save-exam.dto';
 import { multerConfig } from 'src/config/multer';
@@ -29,6 +30,7 @@ export class ExamController {
   constructor(
     private readonly examService: ExamService,
     private readonly questionService: QuestionService,
+    private readonly examResultService: ExamResultService,
   ) {}
 
   /**
@@ -79,7 +81,16 @@ export class ExamController {
     // 保存语音流
     const userAudioUrl = await this.examService.saveAudio(userAudio);
     const payLoad = { ...RecordDto, userAudioUrl };
-    return await this.examService.saveExamRecord(payLoad);
+    const saveResult = (await this.examService.saveExamRecord(payLoad)) as any;
+    this.examService.requestSpeechText(userAudio, saveResult.id);
+    return saveResult;
+  }
+
+  @Post('recordUserAnswerText')
+  async recordUserAnswerText(
+    @Body() updateRow: { id: number; userAnswer: string },
+  ) {
+    return await this.examService.saveExamRecord(updateRow);
   }
 
   // AI润色答案
@@ -109,6 +120,8 @@ export class ExamController {
       userId,
       id: examData.id,
     });
+    this.examResultService.save(examData.id);
+    return { message: '保存成功' };
   }
 
   // 删除当前考试记录
